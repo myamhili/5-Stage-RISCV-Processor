@@ -28,10 +28,14 @@ module register_file (
         end
     end
 
-    // Read port 1 - asynchronous read
-    assign read_data1 = (read_addr1 == 5'b0) ? 32'h0 : registers[read_addr1];
+    // Read port 1 - asynchronous read with internal forwarding
+    assign read_data1 = (read_addr1 == 5'b0) ? 32'h0 : 
+                        (we && (write_addr == read_addr1)) ? write_data : 
+                        registers[read_addr1];
     
-    // Read port 2 - asynchronous read
-    assign read_data2 = (read_addr2 == 5'b0) ? 32'h0 : registers[read_addr2];
+    // Read port 2 - asynchronous read with internal forwarding
+    assign read_data2 = (read_addr2 == 5'b0) ? 32'h0 : 
+                        (we && (write_addr == read_addr2)) ? write_data : 
+                        registers[read_addr2];
 
 endmodule

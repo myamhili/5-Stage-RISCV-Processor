@@ -1,10 +1,10 @@
 # Simple RISC-V Processor
 
-A basic single-cycle RISC-V processor implementation in Verilog, supporting a subset of the RV32I base integer instruction set.
+A basic 5-stage pipelined RISC-V processor implementation in Verilog, supporting a subset of the RV32I base integer instruction set. The pipeline includes data forwarding and hazard detection units.
 
 ## Overview
 
-This processor implements a subset of RISC-V RV32I instructions:
+This processor implements a subset of RISC-V RV32I instructions in a 5-stage pipeline (IF, ID, EX, MEM, WB):
 - **Arithmetic/Logic**: add, sub, and, or, xor
 - **Memory Access**: lw (load word), sw (store word)
 - **Control Flow**: beq (branch if equal)
