@@ -1,4 +1,4 @@
-# Simple RISC-V Processor
+# 5-Stage-RISCV-Processor
 
 A basic 5-stage pipelined RISC-V processor implementation in Verilog, supporting a subset of the RV32I base integer instruction set. The pipeline includes data forwarding and hazard detection units.
 
