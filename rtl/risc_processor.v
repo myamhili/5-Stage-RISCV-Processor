@@ -6,7 +6,8 @@ module risc_processor (
     output wire [31:0] pc_out,
     output wire [31:0] instruction_out,
     output wire [31:0] alu_result_out,
-    output wire [31:0] mem_read_data_out
+    output wire [31:0] mem_read_data_out,
+    output wire [31:0] led_out
 );
 
     // =========================================================
@@ -267,7 +268,8 @@ module risc_processor (
         .re           (ex_mem_mem_read),
         .addr         (ex_mem_alu_result),
         .write_data   (ex_mem_write_data),
-        .read_data    (mem_read_data)
+        .read_data    (mem_read_data),
+        .led_out      (led_out)
     );
 
     // MEM/WB Pipeline Register

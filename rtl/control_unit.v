@@ -22,6 +22,7 @@ module control_unit (
     // RISC-V opcodes
     localparam OP_RTYPE = 7'b0110011;  // R-type (add, sub, and, or)
     localparam OP_ITYPE = 7'b0000011;  // I-type (lw)
+    localparam OP_IALU  = 7'b0010011;  // I-type ALU (addi, etc.)
     localparam OP_STYPE = 7'b0100011;  // S-type (sw)
     localparam OP_BTYPE = 7'b1100011;  // B-type (beq)
 
@@ -60,6 +61,22 @@ module control_unit (
                     3'b100: alu_op = 4'b0100;  // XOR
                     default: alu_op = 4'b0000;
                 endcase
+            end
+            
+            OP_IALU: begin  // I-type ALU: addi, etc.
+                reg_write = 1'b1;
+                alu_src   = 2'b01;  // Use immediate
+                
+                case (funct3)
+                    3'b000: alu_op = 4'b0000;  // ADDI (ADD operation)
+                    3'b111: alu_op = 4'b0010;  // ANDI
+                    3'b110: alu_op = 4'b0011;  // ORI
+                    3'b100: alu_op = 4'b0100;  // XORI
+                    default: alu_op = 4'b0000;
+                endcase
+                
+                // Sign-extend immediate (12-bit)
+                imm = {{20{instruction[31]}}, instruction[31:20]};
             end
             
             OP_ITYPE: begin  // I-type: lw

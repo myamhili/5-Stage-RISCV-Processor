@@ -9,49 +9,47 @@ module instruction_memory (
     reg [31:0] rom [0:63];
 
     // Initialize with sample program
+    integer i;
     initial begin
-        // RISC-V encoding (RV32I):
-        // add:  R-type (funct7=0000000, rs2=reg, rs1=reg, funct3=000, rd=reg, opcode=0110011)
-        // sub:  R-type (funct7=0100000, rs2=reg, rs1=reg, funct3=000, rd=reg, opcode=0110011)
-        // and:  R-type (funct7=0000000, rs2=reg, rs1=reg, funct3=111, rd=reg, opcode=0110011)
-        // or:   R-type (funct7=0000000, rs2=reg, rs1=reg, funct3=110, rd=reg, opcode=0110011)
-        // lw:   I-type (imm[11:0], rs1=reg, funct3=010, rd=reg, opcode=0000011)
-        // sw:   S-type (imm[11:5], rs2=reg, rs1=reg, funct3=010, imm[4:0], opcode=0100011)
-        // beq:  B-type (imm[12|10:5], rs2, rs1, funct3=000, imm[4:1|11], opcode=1100011)
+        // Fibonacci sequence generator
+        // Calculates fibonacci and writes the current number to the LED port.
         
-        // Let's set initial registers: we assume x1=4, x2=2 (but actually they are 0 at start)
-        // Actually register_file initializes to 0. So x1=0, x2=0.
-        // add x3, x1, x2  -> rs2=x2(00010) rs1=x1(00001) rd=x3(00011) -> 0000000 00010 00001 000 00011 0110011 -> 0x002081B3
-        rom[0] = 32'h002081B3;
+        // NOP all initially
+        for (i = 0; i < 64; i = i + 1) begin
+            rom[i] = 32'h00000013; // default to NOP
+        end
+
+        // Initialization
+        rom[0]  = 32'hFFF00413; // addi x8, x0, -1      (x8 = 0xFFFFFFFF, MMIO address)
+        rom[1]  = 32'h00000093; // addi x1, x0, 0       (x1 = 0, 'a')
+        rom[2]  = 32'h00100113; // addi x2, x0, 1       (x2 = 1, 'b')
+        rom[3]  = 32'h00A00213; // addi x4, x0, 10      (x4 = 10, max loops)
+        rom[4]  = 32'h00000293; // addi x5, x0, 0       (x5 = 0, counter)
+
+        // loop: (Address 5)
+        // if (counter == max) goto end
+        rom[5]  = 32'h00428E63; // beq x5, x4, end      (branch +28 to Address 12)
         
-        // sub x4, x3, x2  -> rs2=x2(00010) rs1=x3(00011) rd=x4(00100) -> 0100000 00010 00011 000 00100 0110011 -> 0x40218233
-        rom[1] = 32'h40218233;
+        // next = a + b
+        rom[6]  = 32'h002081B3; // add x3, x1, x2       (x3 = x1 + x2)
         
-        // and x5, x3, x4  -> rs2=x4(00100) rs1=x3(00011) rd=x5(00101) -> 0000000 00100 00011 111 00101 0110011 -> 0x0041F2B3
-        rom[2] = 32'h0041F2B3;
+        // a = b
+        rom[7]  = 32'h002000B3; // add x1, x0, x2       (x1 = x2)
         
-        // or  x6, x4, x5  -> rs2=x5(00101) rs1=x4(00100) rd=x6(00110) -> 0000000 00101 00100 110 00110 0110011 -> 0x00526333
-        rom[3] = 32'h00526333;
+        // b = next
+        rom[8]  = 32'h00300133; // add x2, x0, x3       (x2 = x3)
         
-        // lw  x7, 0(x1)   -> imm=0 rs1=x1(00001) rd=x7(00111)         -> 000000000000 00001 010 00111 0000011 -> 0x0000A383
-        rom[4] = 32'h0000A383;
+        // LED = a
+        rom[9]  = 32'h00142023; // sw x1, 0(x8)         (Mem[0xFFFFFFFF] = x1)
         
-        // sw  x7, 4(x1)   -> imm=4 rs2=x7(00111) rs1=x1(00001)        -> 0000000 00111 00001 010 00100 0100011 -> 0x0070A223
-        rom[5] = 32'h0070A223;
+        // counter++
+        rom[10] = 32'h00128293; // addi x5, x5, 1       (x5 = x5 + 1)
         
-        // beq x3, x4, 8   -> rs2=x4(00100) rs1=x3(00011) imm=8(000000001000) -> 0000000 00100 00011 000 01000 1100011 -> 0x00418463
-        rom[6] = 32'h00418463;
+        // goto loop
+        rom[11] = 32'hFE0004E3; // beq x0, x0, loop     (branch -24 to Address 5)
         
-        // Fill rest with NOP (addi x0, x0, 0)
-        rom[7] = 32'h00000013;
-        rom[8] = 32'h00000013;
-        rom[9] = 32'h00000013;
-        rom[10] = 32'h00000013;
-        rom[11] = 32'h00000013;
-        rom[12] = 32'h00000013;
-        rom[13] = 32'h00000013;
-        rom[14] = 32'h00000013;
-        rom[15] = 32'h00000013;
+        // end: (Address 12)
+        rom[12] = 32'h00000063; // beq x0, x0, end      (infinite loop)
     end
 
     // Read instruction - word aligned

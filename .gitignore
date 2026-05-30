@@ -1,0 +1,17 @@
+# Vivado generated files
+vivado*.jou
+vivado*.log
+vivado*.str
+vivado*.backup.*
+
+# Vivado project directories
+vivado_proj/
+vivado_proj_bitstream/
+.Xil/
+
+# Icarus Verilog output
+*.vvp
+*.vcd
+
+# Log files
+*.txt
