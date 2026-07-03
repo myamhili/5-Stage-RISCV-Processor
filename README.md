@@ -2,6 +2,13 @@
 
 A 5-stage pipelined 32-bit RISC-V subset processor written in Verilog and targeted at the Basys 3 Artix-7 FPGA. The core implements instruction fetch, decode, execute, memory, and writeback stages with forwarding, load-use hazard detection, branch flushing, and MMIO LED output.
 
+<img width="1174" height="646" alt="unnamed" src="https://github.com/user-attachments/assets/9cd86f4a-4fbe-4710-94a0-9286ee87db11" />
+<img width="1900" height="394" alt="timing reports" src="https://github.com/user-attachments/assets/3411a6e4-917c-4cfc-828f-f3a2c123e55b" />
+<img width="2316" height="1332" alt="waveform" src="https://github.com/user-attachments/assets/806eb8ef-fcc7-4928-977a-4df385d4549c" />
+
+
+
+
 ## Supported Instructions
 
 This is an RV32I subset implementation, not a complete RV32I core.
