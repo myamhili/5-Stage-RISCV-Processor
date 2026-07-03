@@ -7,11 +7,13 @@ vivado*.backup.*
 # Vivado project directories
 vivado_proj/
 vivado_proj_bitstream/
+vivado_sim/
 .Xil/
 
 # Icarus Verilog output
 *.vvp
 *.vcd
+sim/build/
 
 # Log files
 *.txt

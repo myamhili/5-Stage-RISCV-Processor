@@ -52,12 +52,9 @@ module risc_processor (
         if (rst) begin
             if_id_pc          <= 32'h0;
             if_id_instruction <= 32'h00000033; // NOP (add x0, x0, x0)
-        end else if (flush_if_id) begin
-            if_id_pc          <= 32'h0;
-            if_id_instruction <= 32'h00000033; // NOP
         end else if (if_id_en) begin
-            if_id_pc          <= if_pc;
-            if_id_instruction <= if_instruction;
+            if_id_pc          <= flush_if_id ? 32'h0 : if_pc;
+            if_id_instruction <= flush_if_id ? 32'h00000033 : if_instruction; // NOP on branch flush
         end
     end
 
@@ -134,7 +131,7 @@ module risc_processor (
     reg [3:0]  id_ex_alu_op;
 
     always @(posedge clk or posedge rst) begin
-        if (rst || flush_id_ex || flush_id_ex_branch) begin
+        if (rst) begin
             id_ex_pc             <= 32'h0;
             id_ex_reg_read_data1 <= 32'h0;
             id_ex_reg_read_data2 <= 32'h0;
@@ -142,6 +139,13 @@ module risc_processor (
             id_ex_rs1            <= 5'h0;
             id_ex_rs2            <= 5'h0;
             id_ex_rd             <= 5'h0;
+            id_ex_reg_write      <= 1'b0;
+            id_ex_mem_read       <= 1'b0;
+            id_ex_mem_write      <= 1'b0;
+            id_ex_branch         <= 1'b0;
+            id_ex_alu_src        <= 2'b00;
+            id_ex_alu_op         <= 4'b0000;
+        end else if (flush_id_ex || flush_id_ex_branch) begin
             id_ex_reg_write      <= 1'b0;
             id_ex_mem_read       <= 1'b0;
             id_ex_mem_write      <= 1'b0;
