@@ -17,7 +17,7 @@ module instruction_memory (
         begin
             // Fibonacci sequence generator
             // Calculates fibonacci and writes the current number to the LED port.
-            rom[0]  = 32'hFFF00413; // addi x8, x0, -1      (x8 = 0xFFFFFFFF, MMIO address)
+            rom[0]  = 32'h40001437; // lui x8, 0x40001      (x8 = 0x40001000, GPIO address)
             rom[1]  = 32'h00000093; // addi x1, x0, 0       (x1 = 0, 'a')
             rom[2]  = 32'h00100113; // addi x2, x0, 1       (x2 = 1, 'b')
             rom[3]  = 32'h00A00213; // addi x4, x0, 10      (x4 = 10, max loops)

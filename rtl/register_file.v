@@ -16,7 +16,7 @@ module register_file (
     reg [31:0] registers [0:31];
 
     integer i;
-    always @(posedge clk or posedge rst) begin
+    always @(posedge clk) begin
         if (rst) begin
             // Initialize all registers to 0
             for (i = 0; i < 32; i = i + 1) begin

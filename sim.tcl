@@ -1,5 +1,7 @@
 # Open the existing Vivado project
 open_project ./vivado_proj/risc_processor_vivado.xpr
+add_files [glob ./rtl/*.v]
+add_files -fileset sim_1 -norecurse ./sim/bus_monitor.v
 
 # Add the testbench to the simulation fileset
 add_files -fileset sim_1 -norecurse ./sim/tb_risc_processor.v

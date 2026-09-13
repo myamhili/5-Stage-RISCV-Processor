@@ -22,12 +22,16 @@ module tb_wave_branch_flush;
     initial begin
         rst = 1'b1;
         repeat (2) @(posedge clk);
+        @(negedge clk);
         rst = 1'b0;
     end
 
     risc_processor uut (
         .clk                  (clk),
         .rst                  (rst),
+        .irq_software         (1'b0),
+        .irq_timer            (1'b0),
+        .irq_external         (1'b0),
         .pc_out               (pc_out),
         .instruction_out      (instruction_out),
         .alu_result_out       (alu_result_out),

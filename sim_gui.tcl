@@ -10,7 +10,12 @@ add_files ./rtl/control_unit.v
 add_files ./rtl/register_file.v
 add_files ./rtl/alu.v
 add_files ./rtl/data_memory.v
+add_files ./rtl/csr_file.v
 add_files ./rtl/risc_processor.v
+add_files ./rtl/risc_core.v
+add_files ./rtl/simple_soc.v
+add_files ./rtl/soc_memory.v
+add_files ./rtl/memory_delay.v
 
 add_files -fileset sim_1 ./sim/tb_wave_branch_flush.v
 
@@ -33,13 +38,13 @@ safe_add_wave /tb_wave_branch_flush/clk
 safe_add_wave /tb_wave_branch_flush/rst
 safe_add_wave /tb_wave_branch_flush/pc_out
 safe_add_wave /tb_wave_branch_flush/instruction_out
-safe_add_wave /tb_wave_branch_flush/uut/pc_branch
-safe_add_wave /tb_wave_branch_flush/uut/load_use_hazard
-safe_add_wave /tb_wave_branch_flush/uut/if_id_instruction
-safe_add_wave /tb_wave_branch_flush/uut/id_ex_rd
-safe_add_wave /tb_wave_branch_flush/uut/id_ex_reg_write
-safe_add_wave /tb_wave_branch_flush/uut/id_ex_mem_write
-safe_add_wave /tb_wave_branch_flush/uut/id_ex_branch
+safe_add_wave /tb_wave_branch_flush/uut/soc/core/pc_redirect
+safe_add_wave /tb_wave_branch_flush/uut/soc/core/load_use_hazard
+safe_add_wave /tb_wave_branch_flush/uut/soc/core/if_id_instruction
+safe_add_wave /tb_wave_branch_flush/uut/soc/core/id_ex_rd
+safe_add_wave /tb_wave_branch_flush/uut/soc/core/id_ex_reg_write
+safe_add_wave /tb_wave_branch_flush/uut/soc/core/id_ex_mem_write
+safe_add_wave /tb_wave_branch_flush/uut/soc/core/id_ex_branch_op
 
 run 500 ns
 zoom_fit
